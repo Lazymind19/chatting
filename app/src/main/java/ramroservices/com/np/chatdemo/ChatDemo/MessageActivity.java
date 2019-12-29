@@ -107,7 +107,7 @@ public class MessageActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Userlist userlist = dataSnapshot.getValue(Userlist.class);
-                tvusername.setText(userlist.getUsername());
+                tvusername.setText(userlist.getUsername().toUpperCase());
 
                 readMessage(firebaseUser.getUid(),userid);
 
@@ -159,6 +159,23 @@ public class MessageActivity extends AppCompatActivity {
         hashMap.put("receiver",receiver);
         hashMap.put("message",message);
         databaseReference.child("messages").push().setValue(hashMap);
+
+        //for chatlist of frag
+
+        final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("chatlist").child(firebaseUser.getUid()).child(userid);
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()){
+                    reference.child("id").setValue(userid);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         final String msg = message;
         databaseReference = FirebaseDatabase.getInstance().getReference("members").child(firebaseUser.getUid());

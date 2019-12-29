@@ -38,7 +38,7 @@ FirebaseUser firebaseUser;
         viewPager = findViewById(R.id.vpone);
         ViewpageAdapter viewpageAdapter = new ViewpageAdapter(getSupportFragmentManager());
         viewpageAdapter.addFragment(new UserFragment(),"Users");
-        viewpageAdapter.addFragment(new ChatFragment(),"Chat");
+        viewpageAdapter.addFragment(new ChatFragment(),"Recent Chat");
         viewPager.setAdapter(viewpageAdapter);
         tabLayout.setupWithViewPager(viewPager);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
