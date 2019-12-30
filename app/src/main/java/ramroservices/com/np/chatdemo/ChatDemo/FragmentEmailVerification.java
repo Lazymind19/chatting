@@ -86,6 +86,8 @@ public class FragmentEmailVerification extends Fragment {
                             HashMap<String, String> hashMap = new HashMap<>();
                             hashMap.put("id", userid);
                             hashMap.put("username", userame);
+                            hashMap.put("status","offline");
+                            hashMap.put("typingto","noone");
 
                             databaseReference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override

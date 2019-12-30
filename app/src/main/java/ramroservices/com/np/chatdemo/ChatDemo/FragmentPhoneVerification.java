@@ -123,6 +123,8 @@ public class FragmentPhoneVerification extends Fragment {
                             HashMap<String, String> hashMap = new HashMap<>();
                             hashMap.put("id", userid);
                             hashMap.put("username", username);
+                            hashMap.put("status","offline");
+                            hashMap.put("typingto","noone");
                             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("members").child(userid);
                             databaseReference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override

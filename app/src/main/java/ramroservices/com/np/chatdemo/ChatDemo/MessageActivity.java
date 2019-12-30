@@ -10,6 +10,9 @@ import android.os.Bundle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.EditText;
@@ -55,7 +58,7 @@ public class MessageActivity extends AppCompatActivity {
     DatabaseReference databaseReference, databaseReferenceimage;
     String titlename,myurl="";
     private Uri fileuri;
-    TextView tvusername;
+    TextView tvusername,tvtypingstatus;
     EditText etmessage;
     ImageButton ibsendbtn,ibfilesend;
     Intent intent;
@@ -97,6 +100,7 @@ public class MessageActivity extends AppCompatActivity {
         rvmessagelist.setLayoutManager(linearLayoutManager);
 
         tvusername = findViewById(R.id.tvusername);
+        tvtypingstatus = findViewById(R.id.tvtypingstatus);
 
         intent = getIntent();
         userid = intent.getStringExtra("userid");
@@ -108,6 +112,13 @@ public class MessageActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Userlist userlist = dataSnapshot.getValue(Userlist.class);
                 tvusername.setText(userlist.getUsername().toUpperCase());
+                String typingstatus = userlist.getTypingto();
+                if (typingstatus.equals(firebaseUser.getUid())){
+                    tvtypingstatus.setText("is typing");
+                }
+                else{
+                    tvtypingstatus.setText("");
+                }
 
                 readMessage(firebaseUser.getUid(),userid);
 
@@ -142,6 +153,30 @@ public class MessageActivity extends AppCompatActivity {
                     Toast.makeText(MessageActivity.this, "Cannot sent empty message", Toast.LENGTH_SHORT).show();
                 }
                 etmessage.setText("");
+            }
+        });
+
+        etmessage.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                if (s.toString().length()==0){
+                    typingstatus("noone");
+                }
+                else{
+                    typingstatus(userid);
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
 
@@ -363,5 +398,51 @@ public class MessageActivity extends AppCompatActivity {
             return false;
         }
         return true;
+    }
+
+    private  void status(String status){
+        databaseReference = FirebaseDatabase.getInstance().getReference("members").child(firebaseUser.getUid());
+        HashMap<String,Object> hashMap = new HashMap<>();
+        hashMap.put("status",status);
+        databaseReference.updateChildren(hashMap);
+
+
+
+    }
+
+
+    private  void typingstatus(String typingstatus){
+        databaseReference = FirebaseDatabase.getInstance().getReference("members").child(firebaseUser.getUid());
+        HashMap<String,Object> hashMap = new HashMap<>();
+        hashMap.put("typingto",typingstatus);
+        databaseReference.updateChildren(hashMap);
+
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        status("online");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        status("offline");
+        typingstatus("noone");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        status("online");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        status("offline");
     }
 }

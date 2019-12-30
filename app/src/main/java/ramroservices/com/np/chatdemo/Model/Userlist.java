@@ -1,7 +1,7 @@
 package ramroservices.com.np.chatdemo.Model;
 
 public class Userlist  {
-    public String username,id,status;
+    public String username,id,status,typingto;
 
     public Userlist() {
     }
@@ -10,6 +10,21 @@ public class Userlist  {
         this.username = username;
         this.id = id;
         this.status = status;
+    }
+
+    public Userlist(String username, String id, String status, String typingto) {
+        this.username = username;
+        this.id = id;
+        this.status = status;
+        this.typingto = typingto;
+    }
+
+    public String getTypingto() {
+        return typingto;
+    }
+
+    public void setTypingto(String typingto) {
+        this.typingto = typingto;
     }
 
     public String getStatus() {
