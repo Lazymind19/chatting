@@ -421,6 +421,7 @@ public class MessageActivity extends AppCompatActivity {
 
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -430,7 +431,7 @@ public class MessageActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        status("offline");
+
         typingstatus("noone");
     }
 
@@ -441,8 +442,8 @@ public class MessageActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        status("offline");
+    protected void onRestart() {
+        super.onRestart();
+        status("online");
     }
 }

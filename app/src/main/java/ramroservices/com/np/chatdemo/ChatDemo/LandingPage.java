@@ -100,9 +100,10 @@ FirebaseUser firebaseUser;
         status("online");
     }
 
+
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onDestroy() {
+        super.onDestroy();
         status("offline");
     }
 
