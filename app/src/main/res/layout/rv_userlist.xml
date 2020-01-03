@@ -50,6 +50,15 @@
         android:paddingLeft="15dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/btnreadalert"
+        app:layout_constraintStart_toEndOf="@+id/tvusername"
+        android:background="@drawable/readalert"
+        android:layout_marginLeft="5dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/tvusername"
+        android:layout_width="15dp"
+        android:layout_height="15dp" />
 
 
 

@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import ramroservices.com.np.chatdemo.Model.Isseen;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -68,6 +69,7 @@ public class MessageActivity extends AppCompatActivity {
     String userid;
     boolean notify = false;
     StorageTask uploadtask;
+
     StorageReference storageReference, filepath;
 
 
@@ -193,6 +195,7 @@ public class MessageActivity extends AppCompatActivity {
         hashMap.put("sender",sender);
         hashMap.put("receiver",receiver);
         hashMap.put("message",message);
+
         databaseReference.child("messages").push().setValue(hashMap);
 
         //for chatlist of frag
@@ -211,6 +214,35 @@ public class MessageActivity extends AppCompatActivity {
 
             }
         });
+
+
+
+
+        final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("isseen").child(userid).child(firebaseUser.getUid());
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()){
+                    ref.child("id").setValue(firebaseUser.getUid());
+                }
+                else {
+                    for (DataSnapshot snapshot:dataSnapshot.getChildren()){
+                        Isseen isseen = snapshot.getValue(Isseen.class);
+                        assert isseen!= null;
+                        if (!isseen.getId().equals(firebaseUser.getUid())){
+                            ref.child("id").setValue(firebaseUser.getUid());
+                        }
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
 
         final String msg = message;
         databaseReference = FirebaseDatabase.getInstance().getReference("members").child(firebaseUser.getUid());

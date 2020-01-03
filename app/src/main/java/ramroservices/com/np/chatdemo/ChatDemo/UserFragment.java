@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ramroservices.com.np.chatdemo.Adapter.UserAdapter;
+import ramroservices.com.np.chatdemo.Model.Isseen;
 import ramroservices.com.np.chatdemo.Model.Userlist;
 import ramroservices.com.np.chatdemo.Notification.Token;
 import ramroservices.com.np.chatdemo.R;
@@ -32,6 +33,7 @@ public class UserFragment extends Fragment {
     UserAdapter userAdapter;
     List<Userlist> userlistList;
     FirebaseUser firebaseUser;
+    List<Isseen> isseens;
 
 
 
@@ -42,16 +44,41 @@ public class UserFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_user, container, false);
         rvuserlist = view.findViewById(R.id.rvusers);
         userlistList = new ArrayList<>();
+        isseens = new ArrayList<>();
         rvuserlist.setHasFixedSize(true);
         rvuserlist.setLayoutManager(new LinearLayoutManager(getContext()));
         firebaseUser =FirebaseAuth.getInstance().getCurrentUser();
 
         readusers();
+        readisseen();
         updatetoken(FirebaseInstanceId.getInstance().getToken());
 
 
 
         return view;
+    }
+
+    public void readisseen(){
+        final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("isseen").child(firebaseUser.getUid());
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                isseens.clear();
+                for (DataSnapshot snapshot:dataSnapshot.getChildren()){
+                    Isseen isseen = snapshot.getValue(Isseen.class);
+                    assert isseen!=null;
+                   isseens.add(isseen);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     public void readusers(){
@@ -72,7 +99,8 @@ public class UserFragment extends Fragment {
                         userlistList.add(userlist);
                     }
                 }
-                userAdapter = new UserAdapter(getContext(),userlistList,true);
+               // userAdapter = new UserAdapter(getContext(),userlistList,true);
+                userAdapter = new UserAdapter(getContext(),userlistList,true,isseens);
                 rvuserlist.setAdapter(userAdapter);
 
             }

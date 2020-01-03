@@ -13,6 +13,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import ramroservices.com.np.chatdemo.ChatDemo.MessageActivity;
+import ramroservices.com.np.chatdemo.Model.Isseen;
 import ramroservices.com.np.chatdemo.Model.Userlist;
 import ramroservices.com.np.chatdemo.R;
 
@@ -20,6 +21,14 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     Context context;
     List<Userlist> userlists;
     private boolean ischat;
+    List<Isseen> isseens;
+
+    public UserAdapter(Context context, List<Userlist> userlists, boolean ischat, List<Isseen> isseens) {
+        this.context = context;
+        this.userlists = userlists;
+        this.ischat = ischat;
+        this.isseens = isseens;
+    }
 
     public UserAdapter(Context context, List<Userlist> userlists, boolean ischat) {
         this.context = context;
@@ -47,6 +56,18 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             }
         });
 
+        if(isseens!=null) {
+
+
+            boolean alert = isseens.contains(userlist.getId());
+            if (alert) {
+                viewHolder.btnalert.setVisibility(View.VISIBLE);
+            } else {
+                viewHolder.btnalert.setVisibility(View.GONE);
+            }
+        }
+
+
         if (ischat){
             if (userlist.getStatus().equals("online")){
                 viewHolder.btnon.setVisibility(View.VISIBLE);
@@ -63,6 +84,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             viewHolder.btnoff.setVisibility(View.GONE);
         }
 
+
+
     }
 
     @Override
@@ -72,12 +95,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvusername;
-        Button btnon,btnoff;
+        Button btnon,btnoff,btnalert;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvusername = itemView.findViewById(R.id.tvusername);
             btnon = itemView.findViewById(R.id.btnonline);
             btnoff = itemView.findViewById(R.id.btnoffline);
+            btnalert =itemView.findViewById(R.id.btnreadalert);
 
         }
     }
