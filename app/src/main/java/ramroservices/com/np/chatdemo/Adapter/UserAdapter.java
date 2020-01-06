@@ -4,11 +4,21 @@ import android.content.Context;
 import android.content.Intent;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -50,6 +60,42 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("isseen").child(firebaseUser.getUid());
+
+                databaseReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snapshot:dataSnapshot.getChildren()){
+                            Isseen isseen = snapshot.getValue(Isseen.class);
+                            if (isseen!=null){
+
+                                for(int x=0;x<isseens.size();x++){
+                                    Isseen isseen1 =isseens.get(x);
+                                    if (isseen1.getId().equals(userlist.getId())){
+                                       // viewHolder.btnalert.setVisibility(View.VISIBLE);
+                                        databaseReference.removeValue();
+
+                                        break;
+                                    }
+                                    else {
+                                       // viewHolder.btnalert.setVisibility(View.GONE);
+                                    }
+
+                                }
+
+
+                            }
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
                 Intent intent = new Intent(context, MessageActivity.class);
                 intent.putExtra("userid",userlist.getId());
                 context.startActivity(intent);
@@ -58,13 +104,25 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
         if(isseens!=null) {
 
+            int a=isseens.size();
+            for(int x=0;x<isseens.size();x++){
+                Isseen isseen =isseens.get(x);
+                if (isseen.getId().equals(userlist.getId())){
+                    viewHolder.btnalert.setVisibility(View.VISIBLE);
+                    break;
+                }
+                else {
+                    viewHolder.btnalert.setVisibility(View.GONE);
+                }
 
-            boolean alert = isseens.contains(userlist.getId());
-            if (alert) {
-                viewHolder.btnalert.setVisibility(View.VISIBLE);
-            } else {
-                viewHolder.btnalert.setVisibility(View.GONE);
             }
+
+//            boolean alert = isseens.contains(userlist.getId());
+//            if (alert) {
+//                viewHolder.btnalert.setVisibility(View.VISIBLE);
+//            } else {
+//                viewHolder.btnalert.setVisibility(View.GONE);
+//            }
         }
 
 
