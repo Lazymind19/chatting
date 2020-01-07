@@ -3,6 +3,7 @@ package ramroservices.com.np.chatdemo.ChatDemo;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -48,6 +49,8 @@ public class UserFragment extends Fragment {
         rvuserlist.setHasFixedSize(true);
         rvuserlist.setLayoutManager(new LinearLayoutManager(getContext()));
         firebaseUser =FirebaseAuth.getInstance().getCurrentUser();
+
+
 
         readusers();
         readisseen();
@@ -122,6 +125,14 @@ public class UserFragment extends Fragment {
         databaseReference.child(firebaseUser.getUid()).setValue(token1);
 
 
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser){
+            getFragmentManager().beginTransaction().detach(this).attach(this).commit();
+        }
     }
 
 

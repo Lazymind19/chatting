@@ -54,7 +54,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull UserAdapter.ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull final UserAdapter.ViewHolder viewHolder, int i) {
         final Userlist userlist = userlists.get(i);
         viewHolder.tvusername.setText(userlist.getUsername());
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -74,7 +74,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                                     Isseen isseen1 =isseens.get(x);
                                     if (isseen1.getId().equals(userlist.getId())){
                                        // viewHolder.btnalert.setVisibility(View.VISIBLE);
-                                        databaseReference.removeValue();
+                                        databaseReference.child(isseen1.getId()).removeValue();
+                                        viewHolder.btnalert.setVisibility(View.GONE);
 
                                         break;
                                     }
