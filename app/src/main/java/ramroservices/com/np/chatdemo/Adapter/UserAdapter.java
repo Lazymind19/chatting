@@ -32,6 +32,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     List<Userlist> userlists;
     private boolean ischat;
     List<Isseen> isseens;
+    int x;
 
     public UserAdapter(Context context, List<Userlist> userlists, boolean ischat, List<Isseen> isseens) {
         this.context = context;
@@ -49,8 +50,11 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     @NonNull
     @Override
     public UserAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.rv_userlist,viewGroup,false);
-        return new ViewHolder(view);
+
+            View view = LayoutInflater.from(context).inflate(R.layout.rv_userlist, viewGroup, false);
+            return new ViewHolder(view);
+
+
     }
 
     @Override
@@ -66,21 +70,20 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                 databaseReference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for (DataSnapshot snapshot:dataSnapshot.getChildren()){
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             Isseen isseen = snapshot.getValue(Isseen.class);
-                            if (isseen!=null){
+                            if (isseen != null) {
 
-                                for(int x=0;x<isseens.size();x++){
-                                    Isseen isseen1 =isseens.get(x);
-                                    if (isseen1.getId().equals(userlist.getId())){
-                                       // viewHolder.btnalert.setVisibility(View.VISIBLE);
+                                for (int x = 0; x < isseens.size(); x++) {
+                                    Isseen isseen1 = isseens.get(x);
+                                    if (isseen1.getId().equals(userlist.getId())) {
+                                        // viewHolder.btnalert.setVisibility(View.VISIBLE);
                                         databaseReference.child(isseen1.getId()).removeValue();
                                         viewHolder.btnalert.setVisibility(View.GONE);
 
                                         break;
-                                    }
-                                    else {
-                                       // viewHolder.btnalert.setVisibility(View.GONE);
+                                    } else {
+                                        // viewHolder.btnalert.setVisibility(View.GONE);
                                     }
 
                                 }
@@ -98,21 +101,20 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                 });
 
                 Intent intent = new Intent(context, MessageActivity.class);
-                intent.putExtra("userid",userlist.getId());
+                intent.putExtra("userid", userlist.getId());
                 context.startActivity(intent);
             }
         });
 
-        if(isseens!=null) {
+        if (isseens != null) {
 
-            int a=isseens.size();
-            for(int x=0;x<isseens.size();x++){
-                Isseen isseen =isseens.get(x);
-                if (isseen.getId().equals(userlist.getId())){
+            int a = isseens.size();
+            for (int x = 0; x < isseens.size(); x++) {
+                Isseen isseen = isseens.get(x);
+                if (isseen.getId().equals(userlist.getId())) {
                     viewHolder.btnalert.setVisibility(View.VISIBLE);
                     break;
-                }
-                else {
+                } else {
                     viewHolder.btnalert.setVisibility(View.GONE);
                 }
 
@@ -127,22 +129,18 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         }
 
 
-        if (ischat){
-            if (userlist.getStatus().equals("online")){
+        if (ischat) {
+            if (userlist.getStatus().equals("online")) {
                 viewHolder.btnon.setVisibility(View.VISIBLE);
                 viewHolder.btnoff.setVisibility(View.GONE);
-            }
-            else {
+            } else {
                 viewHolder.btnoff.setVisibility(View.VISIBLE);
                 viewHolder.btnon.setVisibility(View.GONE);
             }
-        }
-
-        else {
+        } else {
             viewHolder.btnon.setVisibility(View.GONE);
             viewHolder.btnoff.setVisibility(View.GONE);
         }
-
 
 
     }
@@ -154,14 +152,23 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvusername;
-        Button btnon,btnoff,btnalert;
+        Button btnon, btnoff, btnalert;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvusername = itemView.findViewById(R.id.tvusername);
             btnon = itemView.findViewById(R.id.btnonline);
             btnoff = itemView.findViewById(R.id.btnoffline);
-            btnalert =itemView.findViewById(R.id.btnreadalert);
+            btnalert = itemView.findViewById(R.id.btnreadalert);
 
         }
     }
+
+
+
 }
+
+
+
+
+
