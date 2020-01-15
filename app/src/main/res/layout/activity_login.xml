@@ -9,7 +9,7 @@
 
     <ImageView
         android:id="@+id/imagepic"
-        android:src="@drawable/ic_launcher_background"
+        app:srcCompat="@drawable/ic_chat"
         android:layout_marginTop="50dp"
         android:layout_width="wrap_content"
         app:layout_constraintStart_toStartOf="parent"

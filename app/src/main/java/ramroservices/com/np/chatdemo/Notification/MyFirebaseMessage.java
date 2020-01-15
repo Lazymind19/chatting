@@ -11,33 +11,39 @@ import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import ramroservices.com.np.chatdemo.ChatDemo.MessageActivity;
+import ramroservices.com.np.chatdemo.R;
 
 public class MyFirebaseMessage extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
+        JSONObject dataObject= new JSONObject(remoteMessage.getData());
+
+        System.out.println("USER >  "+remoteMessage.getData().get("user"));
+        try {
+            String msg=dataObject.getString("body");
+            int posStart=msg.indexOf(':');
+            int posEnd=msg.length();
+            String sender=msg.substring(0,posStart);
+            msg=msg.substring(posStart,posEnd);
+            showNotification(sender,msg);
 
 
-        String sented = remoteMessage.getData().get("sented");
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (firebaseUser!=null && sented.equals(firebaseUser.getUid())){
 
-            if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){
-                sendOreoNotification(remoteMessage);
-            }
-            else {
-
-                sendNotification(remoteMessage);
-            }
-
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
 
 
@@ -112,8 +118,14 @@ public class MyFirebaseMessage extends FirebaseMessagingService {
 
         noti.notify(i,builder.build());
 
+    }
 
-
+    public void showNotification(String title, String message){
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this,"MyNotifications")
+                .setContentTitle(title).setSmallIcon(R.drawable.ic_send_black_24dp).setAutoCancel(true)
+                .setContentText(message);
+        NotificationManagerCompat manager = NotificationManagerCompat.from(this);
+        manager.notify(999,builder.build());
 
 
 

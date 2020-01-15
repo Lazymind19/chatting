@@ -74,18 +74,22 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                             Isseen isseen = snapshot.getValue(Isseen.class);
                             if (isseen != null) {
 
-                                for (int x = 0; x < isseens.size(); x++) {
-                                    Isseen isseen1 = isseens.get(x);
-                                    if (isseen1.getId().equals(userlist.getId())) {
-                                        // viewHolder.btnalert.setVisibility(View.VISIBLE);
-                                        databaseReference.child(isseen1.getId()).removeValue();
-                                        viewHolder.btnalert.setVisibility(View.GONE);
+                                try {
+                                    for (int x = 0; x < isseens.size(); x++) {
+                                        Isseen isseen1 = isseens.get(x);
+                                        if (isseen1.getId().equals(userlist.getId())) {
+                                            // viewHolder.btnalert.setVisibility(View.VISIBLE);
+                                            databaseReference.child(isseen1.getId()).removeValue();
+                                            viewHolder.btnalert.setVisibility(View.GONE);
 
-                                        break;
-                                    } else {
-                                        // viewHolder.btnalert.setVisibility(View.GONE);
+                                            break;
+                                        } else {
+                                            // viewHolder.btnalert.setVisibility(View.GONE);
+                                        }
+
                                     }
-
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
 
 

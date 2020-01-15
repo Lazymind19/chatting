@@ -226,12 +226,16 @@ public class MessageActivity extends AppCompatActivity {
                     ref.child("id").setValue(firebaseUser.getUid());
                 }
                 else {
-                    for (DataSnapshot snapshot:dataSnapshot.getChildren()){
-                        Isseen isseen = snapshot.getValue(Isseen.class);
-                        assert isseen!= null;
-                        if (!isseen.getId().equals(firebaseUser.getUid())){
-                            ref.child("id").setValue(firebaseUser.getUid());
+                    try {
+                        for (DataSnapshot snapshot:dataSnapshot.getChildren()){
+                            Isseen isseen = snapshot.getValue(Isseen.class);
+                            assert isseen!= null;
+                            if (!isseen.getId().equals(firebaseUser.getUid())){
+                                ref.child("id").setValue(firebaseUser.getUid());
+                            }
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
 
                 }
@@ -282,7 +286,6 @@ public class MessageActivity extends AppCompatActivity {
                     messageAdapter = new MessageAdapter(MessageActivity.this,chatList);
                     rvmessagelist.setAdapter(messageAdapter);
 
-
                 }
             }
 
@@ -311,7 +314,7 @@ public class MessageActivity extends AppCompatActivity {
                                 public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
                                     if (response.code()==200){
                                         if (response.body().success ==1){
-                                            Toast.makeText(MessageActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+                                         //   Toast.makeText(MessageActivity.this, "Failed", Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 }
