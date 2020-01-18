@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +37,7 @@ public class UserFragment extends Fragment {
     List<Userlist> userlistList;
     FirebaseUser firebaseUser;
     List<Isseen> isseens;
+    Handler handler = new Handler();
 
 
 
@@ -52,6 +55,9 @@ public class UserFragment extends Fragment {
 
 
 
+        doReadsissen();
+
+
         readusers();
         readisseen();
         updatetoken(FirebaseInstanceId.getInstance().getToken());
@@ -59,6 +65,15 @@ public class UserFragment extends Fragment {
 
 
         return view;
+    }
+
+    public void doReadsissen(){
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                readisseen();
+            }
+        },5000);
     }
 
     public void readisseen(){

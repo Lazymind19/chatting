@@ -477,6 +477,12 @@ public class MessageActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        finish();
+        super.onBackPressed();
+    }
+
+    @Override
     protected void onRestart() {
         super.onRestart();
         status("online");
